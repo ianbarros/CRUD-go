@@ -8,6 +8,7 @@ import (
 	"github.com/ianbarros/CRUD-go/src/configuration/rest_err/validation"
 	"github.com/ianbarros/CRUD-go/src/controller/model/request"
 	"github.com/ianbarros/CRUD-go/src/model"
+	"github.com/ianbarros/CRUD-go/src/model/service"
 	"go.uber.org/zap"
 )
 
@@ -37,7 +38,8 @@ func CreateUser(c *gin.Context) {
 		userRequest.Name,
 		userRequest.Age,
 	)
-	if err := domain.CreateUser(); err != nil {
+	service := service.NewUserDomainService()
+	if err := service.CreateUser(domain); err != nil {
 		c.JSON(int(err.Code), err)
 		return
 	}
