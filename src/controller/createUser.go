@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ianbarros/CRUD-go/src/configuration/rest_err/logger"
-	"github.com/ianbarros/CRUD-go/src/configuration/rest_err/validation"
+	"github.com/ianbarros/CRUD-go/src/configuration/logger"
+	"github.com/ianbarros/CRUD-go/src/configuration/validation"
 	"github.com/ianbarros/CRUD-go/src/controller/model/request"
 	"github.com/ianbarros/CRUD-go/src/model"
-	"github.com/ianbarros/CRUD-go/src/model/service"
+	"github.com/ianbarros/CRUD-go/src/view"
 	"go.uber.org/zap"
 )
 
@@ -16,7 +16,7 @@ var (
 	UserDomainInterface model.UserDomainInterface
 )
 
-func CreateUser(c *gin.Context) {
+func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	logger.Info("Starting CreateUser controller...",
 		zap.String("journey", "createUser"),
 	)
@@ -38,8 +38,7 @@ func CreateUser(c *gin.Context) {
 		userRequest.Name,
 		userRequest.Age,
 	)
-	service := service.NewUserDomainService()
-	if err := service.CreateUser(domain); err != nil {
+	if err := uc.service.CreateUser(domain); err != nil {
 		c.JSON(int(err.Code), err)
 		return
 	}
@@ -48,5 +47,7 @@ func CreateUser(c *gin.Context) {
 		zap.String("journey", "createUser"),
 	)
 
-	c.String(http.StatusOK, "")
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(
+		domain,
+	))
 }

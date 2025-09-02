@@ -1,8 +1,8 @@
 package service
 
 import (
+	"github.com/ianbarros/CRUD-go/src/configuration/logger"
 	"github.com/ianbarros/CRUD-go/src/configuration/rest_err"
-	"github.com/ianbarros/CRUD-go/src/configuration/rest_err/logger"
 	"github.com/ianbarros/CRUD-go/src/model"
 	"go.uber.org/zap"
 )
