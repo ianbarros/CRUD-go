@@ -1,11 +1,18 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/ianbarros/CRUD-go/src/configuration/rest_err/logger"
 	"github.com/ianbarros/CRUD-go/src/configuration/rest_err/validation"
 	"github.com/ianbarros/CRUD-go/src/controller/model/request"
+	"github.com/ianbarros/CRUD-go/src/model"
 	"go.uber.org/zap"
+)
+
+var (
+	UserDomainInterface model.UserDomainInterface
 )
 
 func CreateUser(c *gin.Context) {
@@ -24,7 +31,20 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	domain := model.NewUserDomain(
+		userRequest.Email,
+		userRequest.Password,
+		userRequest.Name,
+		userRequest.Age,
+	)
+	if err := domain.CreateUser(); err != nil {
+		c.JSON(int(err.Code), err)
+		return
+	}
+
 	logger.Info("User created successfully",
 		zap.String("journey", "createUser"),
 	)
+
+	c.String(http.StatusOK, "")
 }
